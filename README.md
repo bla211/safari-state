@@ -8,4 +8,4 @@ npx shadow-cljs watch app
 
 ### to do
 1) split `app.cljs` into discrete components
-2) add feature for calling out users with `@`
+2) add feature for calling out users with `@{username}`
