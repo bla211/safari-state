@@ -2,7 +2,8 @@
 {:dependencies
  [[reagent "0.8.1"]
   [org.roman01la/cljss "1.6.3"]
-  [stylefy "1.7.0"]]
+  [stylefy "1.7.0"]
+  [cljsjs/moment "2.10.6-0"]]
 
  :source-paths
  ["src"]

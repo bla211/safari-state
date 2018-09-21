@@ -1,6 +1,7 @@
 (ns cljs-for-js-devs.app
     (:require [reagent.core :as r :refer [atom]]
-              [stylefy.core :refer [use-style]]))
+              [stylefy.core :refer [use-style]]
+              [cljsjs.moment]))
 
 (def avatar-style
   {:color "#00C19E"
@@ -89,6 +90,9 @@
    :background "white"
    :float "left"})
 
+(defn fmt-date [d]
+  (.format (js/moment d) "MMMM DD [at] h:mm A"))
+
 (defonce messages (r/atom (sorted-map)))
 
 (defonce counter (r/atom 0))
@@ -103,7 +107,7 @@
     (reset! messageBody "")))
 
 (defonce init (do
-  (add-message "AW" "Andre Wheeler" "Sept 19 at 6:34PM" "We have to make sure that we have all the punch list items accounted for. Cory Robinson I want you to take the lead on this.")))
+  (add-message "AW" "Andre Wheeler" (.getTime (js/Date.)) "We have to make sure that we have all the punch list items accounted for. Cory Robinson I want you to take the lead on this.")))
 
 (defn message [messageObj]
   (fn [{:keys [id initials username timestamp body] :as messageObj}]
@@ -112,7 +116,7 @@
       [:div (use-style details-style)
         [:div (use-style username-style) username]
         [:div (use-style pipe-separator-style) "|"]
-        [:div (use-style timestamp-style) timestamp]
+        [:div (use-style timestamp-style) (fmt-date timestamp)]
         [:div (use-style message-body-style) body]]]))
 
 (defn thread [messages]
@@ -138,12 +142,12 @@
             :style reply-input-style
             :value @messageBody
             :on-change #(reset! messageBody (-> % .-target .-value))
-            :on-key-down #(on-key-down % (@user :initials) (@user :username) "Sept 19 at 6:34PM" @messageBody)
+            :on-key-down #(on-key-down % (@user :initials) (@user :username) (.getTime (js/Date.)) @messageBody)
           }]]))
 
 (defn button [title]
     [:div (use-style button-style
-      {:on-click #(add-message (@user :initials) (@user :username) "Sept 19 at 6:34PM" @messageBody )})
+      {:on-click #(add-message (@user :initials) (@user :username) (.getTime (js/Date.)) @messageBody )})
     title])
 
 (defn messenger [messages]
