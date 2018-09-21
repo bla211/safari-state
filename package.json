@@ -1,0 +1,19 @@
+{
+  "name": "cljs-for-js-devs-starter",
+  "author": "JC <jorge.e.colindres@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/colindresj/cljs-for-js-devs-starter.git"
+  },
+  "devDependencies": {
+    "shadow-cljs": "^2.3.32"
+  },
+  "dependencies": {
+    "create-react-class": "^15.6.3",
+    "moment": "^2.22.2",
+    "npm": "^6.4.1",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2"
+  }
+}
