@@ -1,11 +1,11 @@
-#Safari State App
+# Safari State App
 
-##install dependencies
+## install dependencies
 npm install
 
-##run dev
+## run dev
 npx shadow-cljs watch app
 
-###to do
+### to do
 1) split `app.cljs` into discrete components
 2) add feature for calling out users with `@`
