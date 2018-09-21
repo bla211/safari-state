@@ -93,14 +93,17 @@
 
 (defonce counter (r/atom 0))
 
+(defonce user (r/atom {:initials "BA" :username "Brad Alexander"}))
+
+(def messageBody (r/atom ""))
+
 (defn add-message [initials username timestamp body]
   (let [id (swap! counter inc)]
-    (swap! messages assoc id {:id id :initials initials :username username :timestamp timestamp :body body})))
+    (swap! messages assoc id {:key id :initials initials :username username :timestamp timestamp :body body})
+    (reset! messageBody "")))
 
 (defonce init (do
-  (add-message "BA" "Brad Alexander" "Jan 20 at 6:34PM" "We have to make sure that we have all the punch list items accounted for. Cory Robinson I want you to take the lead on this.")))
-
-
+  (add-message "AW" "Andre Wheeler" "Sept 19 at 6:34PM" "We have to make sure that we have all the punch list items accounted for. Cory Robinson I want you to take the lead on this.")))
 
 (defn message [messageObj]
   (fn [{:keys [id initials username timestamp body] :as messageObj}]
@@ -114,22 +117,34 @@
 
 (defn thread [messages]
   [:div (use-style thread-style)
-   (for [[index messageObj] messages]
-    ^{:key (:id index)}
-    [message messageObj])])
+    (for [[index messageObj] messages]
+      ^{:key (:id index)}
+      [message messageObj])])
+
+(defn on-key-down [k initials username timestamp body]
+  (let [key-pressed (.-which k)]
+    (condp = key-pressed
+      13 (add-message initials username timestamp body)
+      nil)))
 
 (defn reply-input []
-  [:div (use-style reply-input-wrap-style)
-   [:img (use-style icon-style
-    {:src "https://s3.amazonaws.com/bakery-assets.workframe.com/ui/resources/user-icon.svg"})]
-   [:input 
-    {:type "text"
-     :placeholder "Enter reply here"
-     :style reply-input-style}]])
+    (fn []
+      [:div (use-style reply-input-wrap-style)
+        [:img (use-style icon-style
+          {:src "https://s3.amazonaws.com/bakery-assets.workframe.com/ui/resources/user-icon.svg"})]
+        [:input 
+          {:type "text"
+            :placeholder "Enter reply here"
+            :style reply-input-style
+            :value @messageBody
+            :on-change #(reset! messageBody (-> % .-target .-value))
+            :on-key-down #(on-key-down % (@user :initials) (@user :username) "Sept 19 at 6:34PM" @messageBody)
+          }]]))
 
 (defn button [title]
-  [:div (use-style button-style)
-   title])
+    [:div (use-style button-style
+      {:on-click #(add-message (@user :initials) (@user :username) "Sept 19 at 6:34PM" @messageBody )})
+    title])
 
 (defn messenger [messages]
   [:div (use-style messenger-style)
